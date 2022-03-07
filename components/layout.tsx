@@ -5,6 +5,7 @@ import utilStyles from '../styles/utils.module.css';
 import Link from 'next/link';
 import Script from 'next/script';
 import { FacebookIcon, FacebookShareButton } from 'react-share';
+import { useEffect, useState } from 'react';
 
 const name = 'Truong Nguyen';
 export const siteTitle = 'Next.js Sample Website';
@@ -14,7 +15,10 @@ export interface LayoutProps {
   injectFB?: boolean;
 }
 const Layout: React.FC<LayoutProps> = ({ home, children, injectFB }) => {
-  const url = document.location.href;
+  const [url, setUrl] = useState('');
+  useEffect(() => {
+    setUrl(document.location.href);
+  }, []);
   return (
     <div className={styles.container}>
       <Head>
