@@ -3,14 +3,18 @@ import Image from 'next/image';
 import styles from './layout.module.css';
 import utilStyles from '../styles/utils.module.css';
 import Link from 'next/link';
+import Script from 'next/script';
+import { FacebookIcon, FacebookShareButton } from 'react-share';
 
-const name = 'Your Name';
+const name = 'Truong Nguyen';
 export const siteTitle = 'Next.js Sample Website';
 export interface LayoutProps {
   // children?: React.Component;
   home?: boolean;
+  injectFB?: boolean;
 }
-const Layout: React.FC<LayoutProps> = ({ home, children }) => {
+const Layout: React.FC<LayoutProps> = ({ home, children, injectFB }) => {
+  const url = document.location.href;
   return (
     <div className={styles.container}>
       <Head>
@@ -27,6 +31,18 @@ const Layout: React.FC<LayoutProps> = ({ home, children }) => {
         />
         <meta name='og:title' content={siteTitle} />
         <meta name='twitter:card' content='summary_large_image' />
+
+        {injectFB && (
+          <Script
+            src='https://connect.facebook.net/en_US/sdk.js'
+            strategy='lazyOnload'
+            onLoad={() =>
+              console.log(
+                `script loaded correctly, window.FB has been populated`,
+              )
+            }
+          />
+        )}
       </Head>
       <header className={styles.header}>
         {home ? (
@@ -47,7 +63,7 @@ const Layout: React.FC<LayoutProps> = ({ home, children }) => {
               <a>
                 <Image
                   priority
-                  src='/images/profile.jpg'
+                  src='/images/profile.jpeg'
                   className={utilStyles.borderCircle}
                   height={108}
                   width={108}
@@ -65,11 +81,18 @@ const Layout: React.FC<LayoutProps> = ({ home, children }) => {
       </header>
       <main>{children}</main>
       {!home && (
-        <div className={styles.backToHome}>
-          <Link href='/'>
-            <a>← Back to home</a>
-          </Link>
-        </div>
+        <>
+          <div className={styles.backToHome}>
+            <Link href='/'>
+              <a>← Back to home</a>
+            </Link>
+          </div>
+          <div>
+            <FacebookShareButton url={url}>
+              <FacebookIcon size={32} round />
+            </FacebookShareButton>
+          </div>
+        </>
       )}
     </div>
   );
